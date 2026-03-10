@@ -1,9 +1,14 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import total_ordering
+from abc import ABC
+from random import shuffle as rand_shuffle, seed as rand_seed
+
+@dataclass
+class Card(ABC): pass
 
 @total_ordering
 @dataclass()
-class PlayingCard:
+class PlayingCard(Card):
     rank: str
     suit: str
     
@@ -67,8 +72,48 @@ class PlayingCard:
         other_suit_index = PlayingCard._suits.index(other.suit)
         return self_suit_index < other_suit_index
 
-deck = []
-for suit in PlayingCard._suits:
-    for rank in range(2,15):
-        deck.append(PlayingCard(rank, suit))
+    def __repr__(self) -> str:
+        return self.__str__()
+    
+@dataclass
+class Deck:
+    cards: list = field(default_factory = list[Card])
+    
+    def generate_playingcard_deck(self) -> None:
+        for rank in PlayingCard._ranks:
+            for suit in PlayingCard._suits:
+                self.cards.append(PlayingCard(rank, suit))
+                
+    def shuffle(self, seed: int | None = None) -> None:
+        rand_seed(seed)
+        rand_shuffle(self.cards)
         
+    def deal_to_hand(self, hand: Hand, count: int = 1) -> None:
+        for i in range(count):
+            hand.append(self.pop())
+            
+    def append(self, card: Card) -> None: self.cards.append(card)
+    
+    def deal_to_hands(self, hands: list[Hand], cards_per_hand: int = 1) -> None:
+        for i in range(cards_per_hand):
+            for hand in hands:
+                hand.append(self.pop())
+                
+    def pop(self) -> Card:
+        return self.cards.pop()
+    
+    
+@dataclass
+class Hand:
+    cards: list = field(default_factory = list[Card])
+    
+    def append(self, card: Card) -> None: self.cards.append(card)
+    
+deck = Deck()
+deck.generate_playingcard_deck()
+deck.shuffle()
+
+hand_1 = Hand()
+hand_2 = Hand()
+deck.deal_to_hands([hand_1, hand_2], 5)
+print(hand_1, hand_2)
