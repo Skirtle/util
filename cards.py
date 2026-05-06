@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass, field
 from functools import total_ordering
 from abc import ABC, abstractmethod
@@ -162,6 +163,7 @@ class Hand:
         for suit in suit_counts: suit_counts[suit].sort(reverse = True)
         
         hands_satisfied = [0]
+        print(rank_counts, suit_counts)
         
         # 10. Royal flush - Ace high straight and flush
         if (len(hand) >= 5): # Hand requires at least 5 cards
@@ -193,17 +195,31 @@ class Hand:
             
         # 4. Three of a kind - Three of the same rank
         if (len(hand) >= 3): # Hand requires at least 3 cards
-            ...
+            for rank in rank_counts:
+                if (len(rank_counts[rank])) >= 3:
+                    hands_satisfied.append(4)
+                    break
 
         # 3. Two pair - Two of one rank and two of another rank
         if (len(hand) >= 4): # Hand requires at least 4 cards
-            ...
+            diff_rank_pairs = 0
+            for rank in rank_counts:
+                if (len(rank_counts[rank])) >= 2:
+                    diff_rank_pairs += 1
+                
+                if (diff_rank_pairs >= 2):
+                    hands_satisfied.append(3)
+                    break
 
         # 2. Pair - Two of the same rank
         if (len(hand) >= 2): # Hand requires at least 2 cards
-            ...
+            for rank in rank_counts:
+                if (len(rank_counts[rank])) >= 2:
+                    hands_satisfied.append(2)
+                    break
         
-        if (len(hand) != 0): hands_satisfied.append(1) # 1. High card - Any single card
+        if (len(hand) >= 1): hands_satisfied.append(1) # 1. High card - Any single card
+        print(hands_satisfied)
         return max(hands_satisfied)
     
 
