@@ -46,16 +46,16 @@ class PlayingCard():
         
         # Check rank
         if (not (isinstance(self.rank, str) or isinstance(self.rank, int))): raise TypeError(f"Rank must be type str or int but got {type(self.rank).__name__} instead")
-        if (str(self.rank) not in self._inputrank_to_rank): raise ValueError(f"Expected rank in {self._inputrank_to_rank.keys()}, but got {self.rank} instead")
+        if (str(self.rank).lower() not in self._inputrank_to_rank): raise ValueError(f"Expected rank in {self._inputrank_to_rank.keys()}, but got {self.rank} instead")
         
-        self.rank = self._inputrank_to_rank[str(self.rank)]
+        self.rank = self._inputrank_to_rank[str(self.rank).lower()]
         
     def __str__(self) -> str: 
         return f"{self.rank.upper()}{self.suit.upper()}"
     
     def __eq__(self, other) -> bool:
         if (not isinstance(other, PlayingCard)): return NotImplemented
-        return (self.rank == other.rank) and (self.suit == other.suit)
+        return (self.rank.lower() == other.rank.lower()) and (self.suit.lower() == other.suit.lower())
     
     def __lt__(self, other) -> bool:
         if (not isinstance(other, PlayingCard)): return NotImplemented
@@ -78,10 +78,13 @@ class PlayingCard():
 class Deck:
     cards: list = field(default_factory = list[PlayingCard])
     
-    def generate_playingcard_deck(self) -> None:
+    def generate_playingcard_deck(self, shuffle: bool = False, shuffle_seed: int | None = None) -> None:
         for suit in PlayingCard._suits:
             for rank in PlayingCard._ranks:
                 self.cards.append(PlayingCard(rank, suit))
+        
+        if (shuffle):
+            self.shuffle(shuffle_seed)
                 
     def shuffle(self, seed: int | None = None) -> None:
         rand_seed(seed)
@@ -103,7 +106,23 @@ class Deck:
 @dataclass
 class Hand:
     cards: list[PlayingCard] = field(default_factory = list)
+
+    def __str___(self) -> str:
+        s = "["
+        for card in self: s += str(card) + ", "
+        return s[:len(s) - 2] + "]"
     
+    def __repr__(self) -> str:
+        s = "["
+        for card in self: s += str(card) + ", "
+        return s[:len(s) - 2] + "]"
+    
+    def __contains__(self, card: PlayingCard) -> bool:
+        for card_in_hand in self:
+            if (card_in_hand == card):
+                return True
+        return False
+
     def append(self, card: PlayingCard) -> None: self.cards.append(card)
     
     def draw(self, deck: Deck, count: int = 1) -> None:
@@ -229,12 +248,17 @@ def get_rank_value(rank: str) -> int:
         value = ['j', 'q', 'k', 'a'].index(rank) + 11
     return value
 
+def str_to_card(val: str) -> PlayingCard:
+    if (len(val) == 2): return PlayingCard(val[0], val[1])
+    elif (len(val) == 3): return PlayingCard(val[:2], val[2])
+    raise ValueError(f"Card string must be of length 2 or 3, but got {val} is length {len(val)}")
 
-deck = Deck()
-deck.generate_playingcard_deck()
+if __name__ == "__main__":
+    deck = Deck()
+    deck.generate_playingcard_deck()
 
-hand = Hand()
-hand.draw(deck, 5)
-rand_shuffle(hand.cards)
-print(f"Has straight: {hand.has_straight()}")
-print(f"Hand score: {hand.evaluate_hand()}")
+    hand = Hand()
+    hand.draw(deck, 5)
+    rand_shuffle(hand.cards)
+    print(f"Has straight: {hand.has_straight()}")
+    print(f"Hand score: {hand.evaluate_hand()}")
