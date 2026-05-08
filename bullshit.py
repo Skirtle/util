@@ -103,7 +103,7 @@ if __name__ == "__main__":
                     stack = []
                 else:
                     print(f"{last_played} have been revealed, player {prev_player + 1} wasn't kidding")
-                    if (auto_bs): exit(f"Player {prev_player} wins the game!")
+                    if (auto_bs): exit(f"Player {prev_player + 1} wins the game!")
                     # Previous player told the truth, put stack into current hand and reset stack
                     for c in stack:
                         players[current_player].append(c)
