@@ -146,7 +146,7 @@ class Hand:
         
         return False
     
-    def evaluate(self) -> int:
+    def evaluate_hand(self) -> int:
         hand_copy = Hand(self.cards[:])
         hand_copy.sort()
         
@@ -221,7 +221,6 @@ class Hand:
         if (len(hand) >= 1): hands_satisfied.append(1) # 1. High card - Any single card
         print(hands_satisfied)
         return max(hands_satisfied)
-    
 
 def get_rank_value(rank: str) -> int:
     try:
@@ -231,7 +230,6 @@ def get_rank_value(rank: str) -> int:
     return value
 
 
-
 deck = Deck()
 deck.generate_playingcard_deck()
 
@@ -239,4 +237,4 @@ hand = Hand()
 hand.draw(deck, 5)
 rand_shuffle(hand.cards)
 print(f"Has straight: {hand.has_straight()}")
-print(f"Hand score: {hand.evaluate()}")
+print(f"Hand score: {hand.evaluate_hand()}")
