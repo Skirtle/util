@@ -1,25 +1,41 @@
 import cards, util
 
+cardname_to_value = {
+    "Ace": "a",
+    "Two": "2",
+    "Three": "3",
+    "Four": "4",
+    "Five": "5",
+    "Six": "6",
+    "Seven": "7",
+    "Eight": "8",
+    "Nine": "9",
+    "Ten": "10",
+    "Jack": "j",
+    "Queen": "q",
+    "King": "k"
+}
+
+value_to_cardname = {
+    "a": "Ace",
+    "2": "Two",
+    "3": "Three",
+    "4": "Four",
+    "5": "Five",
+    "6": "Six",
+    "7": "Seven",
+    "8": "Eight",
+    "9": "Nine",
+    "10": "Ten",
+    "j": "Jack",
+    "q": "Queen",
+    "k": "King"
+}
+
 def check_claim(table: str, hand: list[cards.PlayingCard]) -> bool:
-    card_names = {
-        "Ace": "a",
-        "Two": "2",
-        "Three": "3",
-        "Four": "4",
-        "Five": "5",
-        "Six": "6",
-        "Seven": "7",
-        "Eight": "8",
-        "Nine": "9",
-        "Ten": "10",
-        "Jack": "j",
-        "Queen": "q",
-        "King": "k"
-    }
-    for card in hand:
-        if (cards.PlayingCard(card_names[table], card.suit) != card): 
-            return False 
-    return True
+    return all(cards.PlayingCard(cardname_to_value[table], card.suit) == card for card in hand)
+
+
 
 if __name__ == "__main__":
     # Create players
@@ -41,21 +57,6 @@ if __name__ == "__main__":
     
     print(f"Starting player is player {current_player + 1}")
     card_order = util.rotate(cards.PlayingCard._ranks)
-    card_names = {
-        "a": "Ace",
-        "2": "Two",
-        "3": "Three",
-        "4": "Four",
-        "5": "Five",
-        "6": "Six",
-        "7": "Seven",
-        "8": "Eight",
-        "9": "Nine",
-        "10": "Ten",
-        "j": "Jack",
-        "q": "Queen",
-        "k": "King"
-    }
     turn_number = 0
     last_claim = {
         "table": "",
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     stack = []
 
     while True:
-        print(f"Player {current_player + 1}'s turn at a {card_names[card_order[turn_number % 13]]}'s table")
+        print(f"Player {current_player + 1}'s turn at a {value_to_cardname[card_order[turn_number % 13]]}'s table")
 
         # Player chooses cards
         choices = [""]
@@ -131,12 +132,12 @@ if __name__ == "__main__":
             if (reset_flag): continue
 
             # They have the chosen cards, time to remove them
-            print(f"Player {current_player + 1} claims {len(cards_chosen)} {card_names[card_order[turn_number % 13]]}'s")
+            print(f"Player {current_player + 1} claims {len(cards_chosen)} {value_to_cardname[card_order[turn_number % 13]]}'s")
             for card in cards_chosen:
                 players[current_player].cards.remove(card) # Remove card from hand
                 stack.append(card) # Put card into stack
                 last_claim["count"] = len(cards_chosen)
-                last_claim["table"] = card_names[card_order[turn_number % 13]]
+                last_claim["table"] = value_to_cardname[card_order[turn_number % 13]]
         
         turn_number += 1
         current_player = (current_player + 1) % PLAYER_COUNT
