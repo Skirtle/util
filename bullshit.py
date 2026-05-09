@@ -1,5 +1,4 @@
 import cards, util
-import random
 
 def check_claim(table: str, hand: list[cards.PlayingCard]) -> bool:
     card_names = {
@@ -25,7 +24,7 @@ def check_claim(table: str, hand: list[cards.PlayingCard]) -> bool:
 if __name__ == "__main__":
     # Create players
     PLAYER_COUNT = 4
-    SEED = 2
+    SEED = None
     deck = cards.Deck()
     deck.generate_playingcard_deck(True, SEED)
     players: list[cards.Hand] = [cards.Hand() for _ in range(PLAYER_COUNT)]
