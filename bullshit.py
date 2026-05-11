@@ -35,8 +35,6 @@ value_to_cardname = {
 def check_claim(table: str, hand: list[cards.PlayingCard]) -> bool:
     return all(cards.PlayingCard(cardname_to_value[table], card.suit) == card for card in hand)
 
-
-
 if __name__ == "__main__":
     # Create players
     PLAYER_COUNT = 4
