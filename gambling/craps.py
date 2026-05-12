@@ -1,4 +1,4 @@
-import dice
+import gambling.dice as dice
 import matplotlib.pyplot as plt
 
 def game(bet: int = 1, limit: int | None = 3, print_rolls: bool = False) -> int:

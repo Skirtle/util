@@ -1,4 +1,4 @@
-import cards, util
+import gambling.cards as cards, util
 
 cardname_to_value = {
     "Ace": "a",
