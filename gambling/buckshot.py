@@ -1,3 +1,4 @@
+from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 from abc import ABC
@@ -28,7 +29,16 @@ class Shotgun:
             self.is_sawed = False
             return 2
         return damage
-        
+
+@dataclass
+class Player:
+    lives: int 
+    items: list[Item] = field(default_factory = list)
+    turns_to_skip: int = 0
+    player_number: int = 0
+    
+    def __str__(self) -> str: return f"Player {self.player_number}: {self.lives} lives, items = {self.items}"
+    def __repr__(self) -> str: return str(self)     
 
 class Item(ABC):
     def use(self, shotgun: Shotgun | None = None, target: Player | None = None) -> object: ...
@@ -67,16 +77,6 @@ class Cigarette(Item):
     def use(self, shotgun: Shotgun | None = None, target: Player | None = None) -> object:
         if (target): target.lives += 1
     def __str__(self) -> str: return "Cigarette"
-    def __repr__(self) -> str: return str(self)
-
-@dataclass
-class Player:
-    lives: int 
-    items: list[Item] = field(default_factory = list)
-    turns_to_skip: int = 0
-    player_number: int = 0
-    
-    def __str__(self) -> str: return f"Player {self.player_number}: {self.lives} lives, items = {self.items}"
     def __repr__(self) -> str: return str(self)
 
 def continue_game(players: list[Player]) -> bool:
