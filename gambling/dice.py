@@ -103,19 +103,19 @@ def roll_dice(dice: str | list[Die | int] | Bag) -> list[int]:
         results = sorted(results, reverse = True)
         
         if ("keephigh" in split_notation): 
-            print(f"Keeping highest {split_notation['keephigh']} of {results}")
+            # print(f"Keeping highest {split_notation['keephigh']} of {results}")
             results = results[:split_notation["keephigh"]]
 
         elif ("keeplow" in split_notation): 
-            print(f"Keeping lowest {split_notation['keeplow']} of {results}")
+            # print(f"Keeping lowest {split_notation['keeplow']} of {results}")
             results = results[len(results) - split_notation["keeplow"]:]
 
         elif ("drophigh" in split_notation): 
-            print(f"Dropping highest {split_notation['drophigh']} of {results}")
+            # print(f"Dropping highest {split_notation['drophigh']} of {results}")
             results = results[split_notation["drophigh"]:]
 
         elif ("droplow" in split_notation): 
-            print(f"Dropping lowest {split_notation['droplow']} of {results}")
+            # print(f"Dropping lowest {split_notation['droplow']} of {results}")
             results = results[:len(results) - split_notation["droplow"]]
 
 
